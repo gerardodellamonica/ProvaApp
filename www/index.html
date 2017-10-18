@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Contact Example</title>
+
+    <script type="text/javascript" charset="utf-8" src="phonegap-1.2.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    // Wait for PhoneGap to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // PhoneGap is ready
+    //
+    function onDeviceReady() {
+        var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
+        db.transaction(populateDB, errorCB, successCB);
+    }
+
+    // Populate the database 
+    //
+    function populateDB(tx) {
+         tx.executeSql('DROP TABLE IF EXISTS DEMO');
+         tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id, data)');
+         
+    }
+
+    // Transaction error callback
+    //
+    function errorCB(tx,err) {
+        alert("Error processing SQL: "+err);
+    }
+
+    // Transaction success callback
+    //
+    function successCB() {
+        alert("success!");
+    }
+
+    function queryDB(tx) {
+    tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
+}
+
+function querySuccess(tx, results) {
+    // this will be empty since no rows were inserted.
+    console.log("Insert ID = " + results.insertId);
+    // this will be 0 since it is a select statement
+    console.log("Rows Affected = " + results.rowAffected);
+    // the number of rows returned by the select statement
+    console.log("Insert ID = " + results.rows.length);
+}
+
+function errorCB(err) {
+    alert("Error processing SQL: "+err.code);
+}
+
+var db = window.openDatabase("Database", "1.0", "PhoneGap Demo", 200000);
+db.transaction(queryDB, errorCB);
+
+    </script>
+  </head>
+  <body>
+    <h1>Example</h1>
+    <p>SQLTransaction</p>
+
+    <a href="#" onclick="queryDB()">avvia</a>
+  </body>
+</html>
